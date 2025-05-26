@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Your Answers - Paper 1</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Choose Your Answers (Paper 1)</h1>
+        <div id="questionsContainer" class="question-grid">
+            </div>
+        <button onclick="calculateScore()">Check Your Score</button>
+    </div>
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const questionsContainer = document.getElementById('questionsContainer');
+            const totalQuestions = 100;
+            const options = ['A', 'B', 'C', 'D'];
+
+            for (let i = 1; i <= totalQuestions; i++) {
+                const questionItem = document.createElement('div');
+                questionItem.classList.add('question-item');
+
+                const questionHeading = document.createElement('h3');
+                questionHeading.textContent = `Q.${i}`;
+                questionItem.appendChild(questionHeading);
+
+                const optionsDiv = document.createElement('div');
+                optionsDiv.classList.add('question-options');
+
+                options.forEach(option => {
+                    const label = document.createElement('label');
+                    const input = document.createElement('input');
+                    input.type = 'radio';
+                    input.id = `q${i}${option}`;
+                    input.name = `q${i}`;
+                    input.value = option;
+                    label.appendChild(input);
+                    label.appendChild(document.createTextNode(option));
+                    optionsDiv.appendChild(label);
+                });
+                questionItem.appendChild(optionsDiv);
+                questionsContainer.appendChild(questionItem);
+            }
+        });
+    </script>
+</body>
+</html>
