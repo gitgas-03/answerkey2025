@@ -140,7 +140,6 @@ function displayResults() {
     const coachingNames = JSON.parse(sessionStorage.getItem('coachingNames'));
 
     if (!scoreResults || !coachingNames || coachingNames.length === 0) {
-        // If results are not available or corrupted, redirect
         alert('No results to display. Please calculate your score first.');
         window.location.href = 'index.html';
         return;
@@ -150,17 +149,10 @@ function displayResults() {
     const tableBody = document.querySelector('#resultTable tbody');
 
     // Clear existing headers/body before populating
-    tableHeadRow.innerHTML = '<th></th>'; // Keep the empty first header
+    tableHeadRow.innerHTML = '';
     tableBody.innerHTML = '';
 
-    // Add coaching names to table header
-    coachingNames.forEach(name => {
-        const th = document.createElement('th');
-        // Make names more readable, remove "Coaching" if it's a prefix
-        th.textContent = name.replace('Coaching', 'Inst. ');
-        tableHeadRow.appendChild(th);
-    });
-
+    // Define categories to display (now these are columns)
     const categories = ['correct', 'incorrect', 'left', 'score'];
     const categoryLabels = {
         correct: 'Correct',
@@ -169,25 +161,65 @@ function displayResults() {
         score: 'Score'
     };
 
+    // Build the table header (Categories are now columns)
+    const emptyHeaderCell = document.createElement('th');
+    tableHeadRow.appendChild(emptyHeaderCell); // Top-left empty cell
     categories.forEach(category => {
-        const row = document.createElement('tr');
         const th = document.createElement('th');
         th.textContent = categoryLabels[category];
+        tableHeadRow.appendChild(th);
+    });
+
+    // Build the table body (Coaching names are now rows)
+    let positiveScoresSum = 0;
+    let positiveScoresCount = 0;
+
+    coachingNames.forEach(coaching => {
+        const row = document.createElement('tr');
+        const th = document.createElement('th'); // Coaching name is now a row header
+        th.textContent = coaching.replace('Coaching', 'Inst. '); // Make names readable
         row.appendChild(th);
 
-        // --- NEW LINE HERE: Add class for score row ---
-        if (category === 'score') {
-            row.classList.add('score-row');
-        }
-        // --- END NEW LINE ---
-
-        coachingNames.forEach(coaching => {
+        categories.forEach(category => {
             const td = document.createElement('td');
-            // Check if result for this coaching and category exists
             const value = scoreResults[coaching] ? scoreResults[coaching][category] : 'N/A';
-            td.textContent = (typeof value === 'number') ? value.toFixed(2) : value; // Format score
+
+            if (category === 'score') {
+                td.textContent = (typeof value === 'number') ? value.toFixed(2) : value; // Format score
+                // Add positive score to average calculation
+                if (typeof value === 'number' && value > 0) {
+                    positiveScoresSum += value;
+                    positiveScoresCount++;
+                }
+            } else {
+                td.textContent = (typeof value === 'number') ? value : value; // Display other stats as-is
+            }
             row.appendChild(td);
         });
         tableBody.appendChild(row);
     });
+
+    // Calculate Average Score
+    const averageScore = positiveScoresCount > 0 ? (positiveScoresSum / positiveScoresCount) : 0;
+
+    // Add the Average Score row
+    const avgRow = document.createElement('tr');
+    avgRow.classList.add('score-row'); // Use the existing highlight style for the average row
+
+    const avgLabelCell = document.createElement('th');
+    avgLabelCell.textContent = 'Average Score (Positive)';
+    avgRow.appendChild(avgLabelCell);
+
+    // Fill in empty cells for correct, incorrect, left (or 'N/A' if preferred)
+    // and then the average score in the 'score' column
+    categories.forEach(category => {
+        const td = document.createElement('td');
+        if (category === 'score') {
+            td.textContent = averageScore.toFixed(2);
+        } else {
+            td.textContent = ''; // Or 'N/A' if you want placeholder for non-score columns
+        }
+        avgRow.appendChild(td);
+    });
+    tableBody.appendChild(avgRow);
 }
