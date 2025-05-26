@@ -175,6 +175,12 @@ function displayResults() {
         th.textContent = categoryLabels[category];
         row.appendChild(th);
 
+        // --- NEW LINE HERE: Add class for score row ---
+        if (category === 'score') {
+            row.classList.add('score-row');
+        }
+        // --- END NEW LINE ---
+
         coachingNames.forEach(coaching => {
             const td = document.createElement('td');
             // Check if result for this coaching and category exists

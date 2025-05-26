@@ -205,3 +205,30 @@ button:active {
         font-size: 1em;
     }
 }
+
+/* New style for highlighting the score row */
+.score-row {
+    background-color: #e6f7ff; /* Light blue background */
+    font-weight: bold;
+    color: #0056b3; /* Darker blue text */
+    font-size: 1.1em;
+}
+
+.score-row td, .score-row th {
+    border-top: 2px solid #a0d9f2; /* Thicker border on top to separate from other rows */
+    border-bottom: 2px solid #a0d9f2; /* Thicker border on bottom */
+}
+
+/* Disclaimer text style */
+.disclaimer {
+    margin-top: 40px;
+    padding: 20px;
+    background-color: #fff3cd; /* Light warning yellow */
+    border: 1px solid #ffeeba; /* Slightly darker yellow border */
+    border-radius: 8px;
+    color: #664d03; /* Dark yellow text */
+    font-size: 0.95em;
+    line-height: 1.5;
+    text-align: left;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
