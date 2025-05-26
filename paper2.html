@@ -38,6 +38,24 @@
                     input.id = `q${i}${option}`;
                     input.name = `q${i}`;
                     input.value = option;
+
+                    // --- NEW TOGGLE LOGIC HERE ---
+                    input.addEventListener('click', function(event) {
+                        const currentChecked = document.querySelector(`input[name="q${i}"]:checked`);
+
+                        if (currentChecked && currentChecked === this && this.dataset.selected === 'true') {
+                            this.checked = false;
+                            delete this.dataset.selected;
+                            event.stopPropagation();
+                        } else {
+                            document.querySelectorAll(`input[name="q${i}"]`).forEach(radio => {
+                                delete radio.dataset.selected;
+                            });
+                            this.dataset.selected = 'true';
+                        }
+                    });
+                    // --- END NEW TOGGLE LOGIC ---
+
                     label.appendChild(input);
                     label.appendChild(document.createTextNode(option));
                     optionsDiv.appendChild(label);
